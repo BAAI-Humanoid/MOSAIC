@@ -186,34 +186,6 @@ Then update the motion path and model path for GMT and Adaptor in with relative 
 bash run/run_mosaic_residual_adaptation.sh
 ```
 
-
-### Run Scripts (Other Commands)
-
-- MOSAIC pure distillation:
-
-```bash
-bash run/run_mosaic_pure_distillation.sh
-```
-
-- Collect expert trajectories:
-
-```bash
-bash run/collect_expert.sh
-```
-
-- Evaluation:
-
-```bash
-bash run/evaluate.sh
-```
-
-
-- Reference velocity estimator (MLP):
-
-```bash
-bash run/train_estimator.sh
-```
-
 ## Code Structure
 
 Below is an overview of the code structure for this repository:
