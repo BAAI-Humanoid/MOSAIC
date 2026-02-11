@@ -161,29 +161,29 @@ This section follows the full training flow in order. Before training, prepare t
 
 Training is provided as shell scripts. Run them in order, and make sure to set the motion source paths inside each script before running.
 
-1) MOSAIC RL (GMT policy training) using multi-source dataset
+1) MOSAIC GMT policy training using multi-source dataset
 
 ```bash
-bash run/run_mosaic_rl.sh
+bash run/run_mosaic_gmt.sh
 ```
 After training, you get the GMT model: `gmt_checkpoint.pt`
 
-2) MOSAIC RL Finetune (finetune GMT policy on adaptor motions)
+1) MOSAIC teleoperation adaptor training using adaptor training data
 
 ```bash
-bash run/run_mosaic_rl_finetune.sh
+bash run/run_mosaic_adaptor.sh
 ```
 
-After training, you get the finetuned GMT model: `finetuned_gmt_checkpoint.pt`
+After training, you get the adaptor model: `adaptor_checkpoint.pt`
 
-Then update the motion path and model path in with relative task config:
+Then update the motion path and model path for GMT and Adaptor in with relative task config:
 - `source/whole_body_tracking/whole_body_tracking/tasks/tracking/config/g1/flat_env_cfg.py`
 - `source/whole_body_tracking/whole_body_tracking/tasks/tracking/config/g1/agents/rsl_rl_mosaic_cfg.py`
 
 3) MOSAIC multi-teacher residual distillation (fast adaptation)
 
 ```bash
-bash run/run_mosaic_multi_teacher.sh
+bash run/run_mosaic_residual_adaptation.sh
 ```
 
 
