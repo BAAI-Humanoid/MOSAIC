@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="MOSAIC: Bridging the Sim-to-Real Gap in Generalist Humanoid Motion Tracking and Teleoperation with Rapid Residual Adaptation">
+    <meta name="description" content="MOSAIC is an open-source, full-stack system for humanoid motion tracking and whole-body teleoperation across multiple interfaces.">
+    <meta name="keywords" content="Humanoid Robots, Motion Tracking, Teleoperation, Reinforcement Learning, Sim-to-Real">
+    <meta name="author" content="MOSAIC Team">
+    <meta name="robots" content="index, follow">
+    
+    <title>MOSAIC: Bridging the Sim-to-Real Gap in Generalist Humanoid Motion Tracking and Teleoperation with Rapid Residual Adaptation</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="static/images/baai_humanoid.ico">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="static/css/bulma.min.css">
+    <link rel="stylesheet" href="static/css/index.css">
+    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 专门为欢迎页添加的样式 - 三段式渐变适配超宽视频 */
+        .hero.video {
+            position: relative;
+            overflow: hidden;
+            /* 渐变：蓝 -> 白 -> 视频(白底) -> 白 -> 蓝 -> 白 */
+            background: linear-gradient(
+                to bottom,
+                #80c5ff 0%,      /* 最顶部：天蓝 */
+                #b3d9ff 8%,     /* 上部：天蓝 */
+                #d6ebff 12%,     /* 上部：浅蓝 */
+                #f0f8ff 15%,     /* 上部：极浅蓝 */
+                #ffffff 20%,     /* === 视频顶部（2%）=== */
+                #ffffff 50%,     /* 视频中间 */
+                #ffffff 80%,     /* === 视频底部（77%）=== */
+                #f0f8ff 82%,     /* 下部：极浅蓝 */
+                #d6ebff 84%,     /* 下部：浅蓝 */
+                #b3d9ff 86%,     /* 下部：天蓝 */
+                #80c5ff 90%,     /* 接近底部：天蓝 */
+                #b3d9ff 93%,     /* 过渡 */
+                #d6ebff 95%,     /* 过渡 */
+                #ffffff 100%     /* 最底部：纯白（衔接正文） */
+            );
+        }
+        
+        .hero-video-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;  /* 保持比例，完整显示 */
+        }
+        
+        /* 可选：轻微遮罩让视频更突出 */
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.02);  /* 几乎透明的白色 */
+            z-index: 2;
+            pointer-events: none;  /* 允许点击穿透到视频 */
+        }
+        
+        .hero-body-content {
+            position: relative;
+            z-index: 3;
+        }
+
+        .teaser-text {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 1.125rem;
+            line-height: 1.6;
+            color: #2d3748;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            padding: 0 1.5rem;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .teaser-text .mode {
+            font-weight: 600;
+            color: #2b6cb0;
+        }
+    </style>
+
+    <!-- JS -->
+    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="static/js/fontawesome.all.min.js"></script>
+    <script defer src="static/js/bulma-carousel.min.js"></script>
+    <script defer src="static/js/bulma-slider.min.js"></script>
+    <script defer src="static/js/index.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
+    <base target="_blank">
+    </head>
+    <body>
+
+    <!-- Scroll to Top -->
+    <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <main id="main-content">
+
+    <!-- ======= 1. 修改位置：新增全屏欢迎页 (BFM-Zero 风格) ======= -->
+    <section class="hero is-fullheight video">
+        <div class="hero-video-container">
+            <video autoplay muted loop playsinline>
+                <source src="static/website_videos/mosaic.mp4" type="video/mp4">
+            </video>
+        </div>
+    </section>
+    <!-- ======================================================= -->
+
+    <!-- Title Section -->
+    <section class="hero mt-6"> <!-- 增加 mt-6 以便和欢迎页拉开距离 -->
+        <div class="hero-body">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered">
+            <div class="column has-text-centered">
+                <h1 class="title is-2 publication-title">MOSAIC: Bridging the Sim-to-Real Gap in Generalist Humanoid Motion Tracking and Teleoperation with Rapid Residual Adaptation</h1>
+                <div class="is-size-5 publication-authors">
+                <span class="author-block">
+                    <a href="#" target="_blank">Zhenguo Sun</a><sup>*1,2</sup>,
+                </span>
+                <span class="author-block">
+                    <a href="#" target="_blank">Bo-Sheng Huang</a><sup>*1,3</sup>,
+                </span>
+                <span class="author-block">
+                    <a href="#" target="_blank">Yibo Peng</a><sup>*1</sup>,
+                </span>
+                <span class="author-block">
+                    <a href="#" target="_blank">Xukun Li</a><sup>*1,2</sup>,
+                </span>
+                <span class="author-block">
+                    <a href="#" target="_blank">Jingyu Ma</a><sup>1</sup>,
+                </span>
+                <span class="author-block">
+                    <a href="#" target="_blank">Yu Sun</a><sup>1</sup>,
+                </span>
+                <span class="author-block">
+                    <a href="#" target="_blank">Zhe Li</a><sup>1</sup>,
+                </span>
+                <span class="author-block">
+                    <a href="#" target="_blank">Haojun Jiang</a><sup>3</sup>,
+                </span>
+                <span class="author-block">
+                    <a href="#" target="_blank">Biao Gao</a><sup>5</sup>,
+                </span>
+                <span class="author-block">
+                    <a href="#" target="_blank">Zhenshan Bing</a><sup>†4</sup>,
+                </span>
+                <span class="author-block">
+                    <a href="#" target="_blank">Xinlong Wang</a><sup>†1</sup>,
+                </span>
+                <span class="author-block">
+                    <a href="#" target="_blank">Alois Knoll</a><sup>2</sup>
+                </span>
+                </div>
+
+                <div class="is-size-5 publication-authors">
+                <span class="author-block"><sup>1</sup>Beijing Academy of Artificial Intelligence, 100084 Beijing, China</span><br>
+                <span class="author-block"><sup>2</sup>Technical University of Munich, 85748 Munich, Germany</span><br>
+                <span class="author-block"><sup>3</sup>Tsinghua University, 100084 Beijing, China</span><br>
+                <span class="author-block"><sup>4</sup>Nanjing University, 215163 Suzhou, China</span><br>
+                <span class="author-block"><sup>5</sup>IO-AI.TECH, 518107 Shenzhen, China</span><br>
+                <span class="eql-cntrb"><small><sup>*</sup>Equal contribution, <sup>†</sup>Corresponding author</small></span>
+                </div>
+
+                <div class="column has-text-centered">
+                <div class="publication-links">
+                    <span class="link-block">
+                        <a href="https://arxiv.org/pdf/2602.08594" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                            <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                            <span>Paper</span>
+                        </a>
+                    </span>
+                    <span class="link-block">
+                        <a href="https://github.com/BAAI-Humanoid/MOSAIC" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                            <span class="icon"><i class="fab fa-github"></i></span>
+                            <span>Code</span>
+                        </a>
+                    </span>
+                    <span class="link-block">
+                        <a href="https://huggingface.co/datasets/BAAI-Humanoid/MOSAIC_Dataset" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                            <span class="icon"><i class="fas fa-database"></i></span>
+                            <span>Dataset</span>
+                        </a>
+                    </span>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Teaser Section -->
+    <!-- <section class="hero teaser">
+        <div class="container is-max-desktop">
+        <div class="hero-body">
+            <img src="static/images/teaser.png" alt="MOSAIC Teaser" style="width:100%; height:auto;">
+            <h2 class="subtitle has-text-centered mt-4">
+            <strong>MOSAIC in Action.</strong> MOSAIC enables a single humanoid policy to operate in two modes: offline motion replay (top) and online whole-body teleoperation from multiple wearable interfaces (bottom). In offline replay, the robot robustly tracks diverse and highly dynamic reference motions—walking, running, kicking, kungfu-style strikes, jumping, and squatting. In online teleoperation, MOSAIC faithfully mirrors real-time human motion streams and supports challenging contact-rich and high-agility behaviors, including mid-air jump turns, single-leg support, and jump-shot–style movements.
+            </h2>
+        </div>
+        </div>
+    </section> -->
+    <div class="teaser-text mt-5">
+        <img src="static/images/teaser.png" alt="MOSAIC Teaser" style="width:100%; height:auto;">
+        <strong>MOSAIC in Action.</strong> MOSAIC enables a single humanoid policy to operate in two modes: 
+        <span class="mode">offline motion replay</span> (top) and 
+        <span class="mode">online whole-body teleoperation</span> from multiple wearable interfaces (bottom). 
+        In <span class="mode">offline replay</span>, the robot robustly tracks diverse and highly dynamic reference motions—walking, running, kicking, kungfu-style strikes, jumping, and squatting. 
+        In <span class="mode">online teleoperation</span>, MOSAIC faithfully mirrors real-time human motion streams and supports challenging contact-rich and high-agility behaviors, including mid-air jump turns, single-leg support, and jump-shot–style movements.
+    </div>
+
+    <!-- Abstract Section -->
+    <section class="section hero is-light">
+        <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths">
+            <h2 class="title is-3">Abstract</h2>
+            <div class="content has-text-justified">
+                <p>
+                Generalist humanoid motion trackers have recently achieved strong simulation metrics by scaling data and training, yet often remain brittle on hardware during sustained teleoperation due to interface- and dynamics-induced errors. We present MOSAIC, an open-source, full-stack system for humanoid motion tracking and whole-body teleoperation across multiple interfaces. MOSAIC first learns a teleoperation-oriented general motion tracker via RL on a multi-source motion bank with adaptive resampling and rewards that emphasize world-frame motion consistency, which is critical for mobile teleoperation. To bridge the sim-to-real interface gap without sacrificing generality, MOSAIC then performs rapid residual adaptation: an interface-specific policy is trained using minimal interface-specific data, and then distilled into the general tracker through an additive residual module, outperforming naive fine-tuning or continual learning. We validate MOSAIC with systematic ablations, out-of-distribution benchmarking, and real-robot experiments demonstrating robust offline motion replay and online long-horizon teleoperation under realistic latency and noise.
+                </p>
+            </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- System Overview Image Section -->
+    <section class="section">
+        <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+            <div class="column is-full-width">
+            <h2 class="title is-3">System Overview</h2>
+            <div class="content has-text-centered">
+                <img src="static/images/system_overview.png" alt="MOSAIC System Overview" style="width:100%; height:auto;">
+                <p class="mt-4 has-text-justified">
+                MOSAIC consists of a unified training–deployment pipeline for humanoid motion tracking and teleoperation. Training/Simulation aggregates heterogeneous multi-source motions, two-level adaptive resampling, policy training process, yielding a deployable policy that preserves generality while improving real-robot robustness. Deployment/Real Robot supports both offline motion replay and online teleoperation. Finally, RobotBridge provides a modular interface that enables consistent evaluation and portable deployment across platforms.
+                </p>
+            </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- ======= 重新设计的视频展示部分 ======= -->
+
+    <!-- 1. 总的 Demo 模块
+    <section class="section hero is-small is-light">
+    <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered">System Overview</h2>
+        <div class="columns is-centered">
+        <div class="column is-10">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/demo.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-3">
+            <p class="is-size-6">A comprehensive demonstration of offline replay and online teleoperation capabilities.</p>
+            </div>
+        </div>
+        </div>
+    </div>
+    </section> -->
+
+    <!-- 2. Offline Replay 模块 -->
+    <section class="section hero is-small">
+    <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered">Offline Replay</h2>
+        <div class="columns is-multiline is-variable is-2">
+            <!-- 视频 1 -->
+            <div class="column is-6">
+                <video autoplay muted loop playsinline width="100%" controls>
+                <source src="static/website_videos/off lafan dance.mp4" type="video/mp4">
+                </video>
+                <div class="has-text-centered mt-2">
+                <p class="is-size-6"><strong>Motion 1:</strong> Dancing.</p>
+                </div>
+            </div>
+            <!-- 视频 2 -->
+            <div class="column is-6">
+                <video autoplay muted loop playsinline width="100%" controls>
+                <source src="static/website_videos/off lafan 倒地.mp4" type="video/mp4">
+                </video>
+                <div class="has-text-centered mt-2">
+                <p class="is-size-6"><strong>Motion 2:</strong> Fall and getup.</p>
+                </div>
+            </div>
+            <!-- 视频 3 -->
+            <div class="column is-6">
+                <video autoplay muted loop playsinline width="100%" controls>
+                <source src="static/website_videos/off 踢腿.mp4" type="video/mp4">
+                </video>
+                <div class="has-text-centered mt-2">
+                <p class="is-size-6"><strong>Motion 3:</strong> Kicking motion.</p>
+                </div>
+            </div>
+            <!-- 视频 4 -->
+            <div class="column is-6">
+                <video autoplay muted loop playsinline width="100%" controls>
+                <source src="static/website_videos/off 疯狂旋转.mp4" type="video/mp4">
+                </video>
+                <div class="has-text-centered mt-2">
+                <p class="is-size-6"><strong>Motion 4:</strong> Sustained high-speed rotation.</p>
+                </div>
+            </div>
+            <!-- 视频 5 -->
+            <div class="column is-6">
+                <video autoplay muted loop playsinline width="100%" controls>
+                <source src="static/website_videos/off 光学 S 形跑步.mp4" type="video/mp4">
+                </video>
+                <div class="has-text-centered mt-2">
+                <p class="is-size-6"><strong>Motion 5:</strong> S-curve trajectory running.</p>
+                </div>
+            </div>
+            <!-- 视频 6 -->
+            <div class="column is-6">
+                <video autoplay muted loop playsinline width="100%" controls>
+                <source src="static/website_videos/off ood video 舞蹈.mp4" type="video/mp4">
+                </video>
+                <div class="has-text-centered mt-2">
+                <p class="is-size-6"><strong>Motion 6:</strong> Dancing.</p>
+                </div>
+            </div>
+            <!-- 视频 7 -->
+            <div class="column is-6">
+                <video autoplay muted loop playsinline width="100%" controls>
+                <source src="static/website_videos/off ood 舞蹈.mp4" type="video/mp4">
+                </video>
+                <div class="has-text-centered mt-2">
+                <p class="is-size-6"><strong>Motion 7:</strong> Folk dance.</p>
+                </div>
+            </div>
+            <!-- 视频 8 -->
+            <div class="column is-6">
+                <video autoplay muted loop playsinline width="100%" controls>
+                <source src="static/website_videos/off 舞蹈2.mp4" type="video/mp4">
+                </video>
+                <div class="has-text-centered mt-2">
+                <p class="is-size-6"><strong>Motion 8:</strong> Dancing.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+
+    <!-- 3. Inertial MoCap Teleoperation 模块 -->
+    <section class="section hero is-small is-light">
+    <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered">Inertial MoCap Teleoperation</h2>
+        <div class="columns is-multiline is-variable is-2">
+        <!-- 视频 1 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/noitom 走路绕圈.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 1:</strong> Circular walking.</p>
+            </div>
+        </div>
+        <!-- 视频 2 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/noitom 跑步3.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 2:</strong> Running.</p>
+            </div>
+        </div>
+        <!-- 视频 3 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/noitom 方格走.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 3:</strong> Walking around the grid (Lane Agility Test).</p>
+            </div>
+        </div>
+        <!-- 视频 4 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/noitom 深蹲.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 4:</strong> Deep squat maneuver.</p>
+            </div>
+        </div>
+        <!-- 视频 5 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/noitom 逆时针旋转跳.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 5:</strong> Counter-clockwise spin jump.</p>
+            </div>
+        </div>
+        <!-- 视频 6 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/noitom 顺时针旋转跳.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 6:</strong> Clockwise spin jump.</p>
+            </div>
+        </div>
+        <!-- 视频 7 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/noitom 摇摆舞.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 7:</strong> Floss dance.</p>
+            </div>
+        </div>
+        <!-- 视频 8 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/noitom 旋转.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 8:</strong> Continuous spinning.</p>
+            </div>
+        </div>
+        <!-- 视频 9 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/noitom 跳投.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 9:</strong> Jump-shot.</p>
+            </div>
+        </div>
+        <!-- 视频 10 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/noitom 纵跳.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 10:</strong> Jumping.</p>
+            </div>
+        </div>
+        <!-- 视频 11 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/noitom 跳房子.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 11:</strong> Hopscotch.</p>
+            </div>
+        </div>
+        <!-- 视频 12 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/noitom 拿箱子.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 12:</strong> Box lifting.</p>
+            </div>
+        </div>
+        </div>
+    </div>
+    </section>
+
+    <!-- 4. VR Teleoperation 模块 -->
+    <section class="section hero is-small">
+    <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered">VR Teleoperation</h2>
+        <div class="columns is-multiline is-variable is-2">
+        <!-- 视频 1 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/VR 走路.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 1:</strong> Walking.</p>
+            </div>
+        </div>
+        <!-- 视频 2 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/VR 奔跑.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 2:</strong> Running.</p>
+            </div>
+        </div>
+        <!-- 视频 3 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/VR 原地蹲姿.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 3:</strong> Squatting posture movement.</p>
+            </div>
+        </div>
+        <!-- 视频 4 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/VR 原地扩胸+踢腿.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 4:</strong> Chest expansion + leg kick.</p>
+            </div>
+        </div>
+        <!-- 视频 5 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/VR 原地转体+拳击.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 5:</strong> Torso twist + punching.</p>
+            </div>
+        </div>
+        <!-- 视频 6 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/VR 蹲下起身.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 6:</strong> Squat-to-stand transition.</p>
+            </div>
+        </div>
+        <!-- 视频 7 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/VR 拿桌子的东西.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 7:</strong> Pick up the item on the table.</p>
+            </div>
+        </div>
+        <!-- 视频 8 -->
+        <div class="column is-6">
+            <video autoplay muted loop playsinline width="100%" controls>
+            <source src="static/website_videos/VR 拿椅子的东西.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+            <p class="is-size-6"><strong>Motion 8:</strong> Pick up the item on the chair.</p>
+            </div>
+        </div>
+        </div>
+    </div>
+    </section>
+
+    <!-- 5. Robustness 测试 模块 (轮播) -->
+    <section class="hero is-small is-light">
+    <div class="hero-body">
+        <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered">Robustness Testing</h2>
+
+        <div id="robustness-carousel" class="carousel results-carousel">
+
+            <div class="item item-robust1">
+            <video poster="" id="robust-video1" autoplay controls muted loop height="100%">
+                <source src="static/website_videos/offline_robustness.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+                <p class="is-size-6"><strong>Test 1:</strong> Offline replay robustness testing.</p>
+            </div>
+            </div>
+
+            <div class="item item-robust2">
+            <video poster="" id="robust-video2" autoplay controls muted loop height="100%">
+                <source src="static/website_videos/noitom_robustness.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+                <p class="is-size-6"><strong>Test 2:</strong> Inertial MoCap teleoperation robustness testing.</p>
+            </div>
+            </div>
+
+            <div class="item item-robust3">
+            <video poster="" id="robust-video3" autoplay controls muted loop height="100%">
+                <source src="static/website_videos/vr_robustness.mp4" type="video/mp4">
+            </video>
+            <div class="has-text-centered mt-2">
+                <p class="is-size-6"><strong>Test 3:</strong> VR teleoperation robustness testing.</p>
+            </div>
+            </div>
+
+        </div>
+        </div>
+    </div>
+    </section>
+
+    <!-- ====================================== -->
+    <!-- BibTeX Section -->
+    <section class="section" id="BibTeX">
+        <div class="container is-max-desktop content">
+            <h2 class="title">BibTeX</h2>
+            <pre style="white-space: pre-wrap; padding-left: 0;"><code>
+@article{sun2026mosaic,
+    title={MOSAIC: Bridging the Sim-to-Real Gap in Generalist Humanoid Motion Tracking and Teleoperation with Rapid Residual Adaptation},
+    author={Zhenguo Sun and Bo-Sheng Huang and Yibo Peng and Xukun Li and Jingyu Ma and Yu Sun and Zhe Li and Haojun Jiang and Biao Gao and Zhenshan Bing and Xinlong Wang and Alois Knoll},
+    journal={arXiv preprint arXiv:2602.08594},
+    year={2026}
+}
+            </code></pre>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+        <div class="content has-text-centered">
+            <p>Website template from <a href="https://github.com/eliahuhorwitz/Academic-project-page-template">Academic Project Page Template</a>.</p>
+        </div>
+        </div>
+    </footer>
+
+    </main>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            if (typeof bulmaCarousel !== 'undefined') {
+                bulmaCarousel.attach('#results-carousel', {
+                    slidesToScroll: 1,
+                    slidesToShow: 1,
+                    infinite: true,
+                    autoplay: false,
+                });
+                
+                // Robustness Testing 轮播初始化
+                bulmaCarousel.attach('#robustness-carousel', {
+                    slidesToScroll: 1,
+                    slidesToShow: 1,
+                    infinite: true,
+                    autoplay: false,
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
+<!-- python -m http.server 8080 --bind 0.0.0.0 -->
+<!-- http://localhost:8080 -->
