@@ -102,7 +102,7 @@ coordinates only.
 
   - Multiple Motions
   ```bash
-  python scripts/batch_csv_to_npz.py --input_dir {motion_path} --input_fps 30 --output_dir {motion_save_path} --headless
+  python scripts/batch_csv_to_npz.py --input_dir {motion_path} --input_fps 30 --output_prefix {output_name} --output_dir {motion_save_path} --headless
   ```
   This converts the processed motion files to the output target path {motion_save_path}.
 
